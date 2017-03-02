@@ -5,3 +5,10 @@
 /root/Downloads/Exercise_7_c#/file_server/obj/x86/Debug/file_server.exe.mdb
 /root/Downloads/Exercise_7_c#/file_server/bin/Debug/LIB.dll
 /root/Downloads/Exercise_7_c#/file_server/bin/Debug/LIB.dll.mdb
+/home/ikn/Documents/IKN/Oevelse7/IKN_OEVELSE7/file_server/obj/x86/Debug/.NETFramework,Version=v4.5.AssemblyAttribute.cs
+/home/ikn/Documents/IKN/Oevelse7/IKN_OEVELSE7/file_server/bin/Debug/file_server.exe.mdb
+/home/ikn/Documents/IKN/Oevelse7/IKN_OEVELSE7/file_server/bin/Debug/file_server.exe
+/home/ikn/Documents/IKN/Oevelse7/IKN_OEVELSE7/file_server/obj/x86/Debug/file_server.exe
+/home/ikn/Documents/IKN/Oevelse7/IKN_OEVELSE7/file_server/obj/x86/Debug/file_server.exe.mdb
+/home/ikn/Documents/IKN/Oevelse7/IKN_OEVELSE7/file_server/bin/Debug/LIB.dll
+/home/ikn/Documents/IKN/Oevelse7/IKN_OEVELSE7/file_server/bin/Debug/LIB.dll.mdb
