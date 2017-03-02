@@ -7,7 +7,7 @@ namespace tcp
 {
 	class file_client
 	{
-		System.Net.Sockets.TcpClient clientSocket = new System.Net.Sockets.TcpClient();
+		TcpClient clientSocket = new TcpClient();
 
 		/// <summary>
 		/// The PORT.
