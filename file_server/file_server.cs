@@ -19,7 +19,7 @@ namespace tcp
 		const int BUFSIZE = 1000;
 		// Change ReceiveBufferSize of TcpListener accordingly if BUFSIZE is changed
 
-
+		static string spacer = "--------------------";
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="file_server"/> class.
@@ -32,7 +32,6 @@ namespace tcp
 		/// </summary>
 		private file_server ()
 		{
-			string spacer = "--------------------";
 			TcpListener serverSocket = new TcpListener (IPAddress.Parse ("10.0.0.1"), PORT); //new TcpListener(IPAddress.Parse("10.0.0.1"), PORT);
 			TcpClient clientSocket = default(TcpClient);
 			serverSocket.Start ();
@@ -51,7 +50,7 @@ namespace tcp
 				input = Console.ReadKey(true);
 			}
 			
-			Console.WriteLine ("Stopping server...");
+			Console.WriteLine (" >> Stopping server...");
 
 			if (clientSocket != null && clientSocket.Connected)
 				clientSocket.Close ();
@@ -62,74 +61,98 @@ namespace tcp
 
 		private static void AsyncStream (TcpListener serverSocket, TcpClient clientSocket)
 		{
-			string spacer = "--------------------";
-
 			try {
 				while (true){
 					// Wait for client to connect
 					// while (!serverSocket.Pending ()); // Used for debugging
 					clientSocket = serverSocket.AcceptTcpClient ();
+					clientSocket.ReceiveBufferSize = 2240;
 					Console.WriteLine (" >> Connected to " + clientSocket.Client.RemoteEndPoint.ToString ());
 
 					// Read path for file to send back
 					NetworkStream networkStream = clientSocket.GetStream ();
-					byte[] bytesFrom = new byte[BUFSIZE];
-					clientSocket.ReceiveBufferSize = 2240;
 
-					networkStream.Read (bytesFrom, 0, BUFSIZE);
-					string dataFromClient = System.Text.Encoding.ASCII.GetString (bytesFrom);
-					dataFromClient = dataFromClient.Substring (0, dataFromClient.IndexOf ("$"));
-					Console.WriteLine (" >> Data from client - " + dataFromClient);
-					var path = dataFromClient;
+					var path = ReceiveFilePath(networkStream);
 
-					if (!File.Exists (path)) {
-						byte[] lengthBytes = BitConverter.GetBytes ((long)-1);
-
-						networkStream.Write (lengthBytes, 0, lengthBytes.Length);
-						Console.WriteLine (" >> Requested file not found");
-						Console.WriteLine (spacer);
+					if (!File.Exists (path))
+					{
+						FileDoesNotExistReponse(networkStream);
 						continue;	// Goes to start of while loop
 					}
+
 
 					using (FileStream fs = new FileStream (path, FileMode.Open)) {
 
 						// For testing purposes
 						//using (var fs = new FileStream(@"c:\temp\onegigabyte.bin", FileMode.Create, FileAccess.ReadWrite, FileShare.None)) {
 						//	fs.SetLength(1024*1024*1024); // Equal to about 1 GB
+						
+						SendSizeToClient(networkStream, fs);
 
-
-						//write length/size of file to client
-						long filesize = fs.Length;
-						byte[] lengthBytes = BitConverter.GetBytes (filesize);
-
-						networkStream.Write (lengthBytes, 0, lengthBytes.Length);
-						Console.WriteLine (" >> Size of file: " + filesize);
-
-						Console.WriteLine (" >> Sending file...");
-						// Send file in chunks
-						byte[] sendBytes = new byte[BUFSIZE];
-						int count;
-
-						while ((count = fs.Read (sendBytes, 0, BUFSIZE)) > 0) {
-							networkStream.Write (sendBytes, 0, count);
-						}
-
-						//networkStream.Flush(); // As of right now, this does nothing on a NetworkStream
+						SendFile(networkStream, fs);
 
 						clientSocket.Close ();
-						Console.WriteLine (" >> Send complete");
-						Console.WriteLine (spacer);
 					}
 
 				} 
 			}
-			catch //(Exception ex) 
+			catch (Exception ex) 
 			{
-				//Console.WriteLine (ex.ToString()); // For debugging
+				Console.WriteLine (ex.ToString()); // For debugging
 				if (clientSocket != null && clientSocket.Connected)
 					clientSocket.Close ();
 				
 			}
+		}
+
+		static void SendFile(NetworkStream networkStream, FileStream fs)
+		{
+			// Send file in chunks
+			Console.WriteLine (" >> Sending file...");
+
+
+			byte[] sendBytes = new byte[BUFSIZE];
+			int count;
+
+			while ((count = fs.Read (sendBytes, 0, BUFSIZE)) > 0) {
+				networkStream.Write (sendBytes, 0, count);
+			}
+
+			//networkStream.Flush(); // As of right now, this does nothing on a NetworkStream
+
+			Console.WriteLine (" >> Send complete");
+			Console.WriteLine (spacer);
+		}
+
+		static string ReceiveFilePath(NetworkStream networkStream)
+		{
+			byte[] bytesFrom = new byte[BUFSIZE];
+
+			networkStream.Read (bytesFrom, 0, BUFSIZE);
+			string dataFromClient = System.Text.Encoding.ASCII.GetString (bytesFrom);
+			dataFromClient = dataFromClient.Substring (0, dataFromClient.IndexOf ("$"));
+			Console.WriteLine (" >> Data from client - " + dataFromClient);
+			return dataFromClient;
+		}
+
+
+		static void FileDoesNotExistReponse(NetworkStream networkStream)
+		{
+			byte[] lengthBytes = BitConverter.GetBytes ((long)-1);
+
+			networkStream.Write (lengthBytes, 0, lengthBytes.Length);
+			Console.WriteLine (" >> Requested file not found");
+			Console.WriteLine (spacer);
+		}
+
+		static void SendSizeToClient(NetworkStream networkStream, FileStream fs)
+		{
+			//write length/size of file to client
+			long filesize = fs.Length;
+			byte[] lengthBytes = BitConverter.GetBytes (filesize);
+
+			networkStream.Write (lengthBytes, 0, lengthBytes.Length);
+			Console.WriteLine (" >> Size of file: " + filesize);
 		}
 
 
