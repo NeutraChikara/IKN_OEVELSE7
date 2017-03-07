@@ -77,6 +77,7 @@ namespace tcp
 					if (!File.Exists (path))
 					{
 						FileDoesNotExistReponse(networkStream);
+						clientSocket.Close ();
 						continue;	// Goes to start of while loop
 					}
 
