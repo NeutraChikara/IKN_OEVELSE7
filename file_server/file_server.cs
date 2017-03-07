@@ -86,8 +86,6 @@ namespace tcp
 						// For testing purposes
 						//using (var fs = new FileStream(@"c:\temp\onegigabyte.bin", FileMode.Create, FileAccess.ReadWrite, FileShare.None)) {
 						//	fs.SetLength(1024*1024*1024); // Equal to about 1 GB
-						
-						SendSizeToClient(networkStream, fs);
 
 						SendFile(networkStream, fs);
 
@@ -107,9 +105,10 @@ namespace tcp
 
 		static void SendFile(NetworkStream networkStream, FileStream fs)
 		{
+			SendSizeToClient(networkStream, fs);
+
 			// Send file in chunks
 			Console.WriteLine (" >> Sending file...");
-
 
 			byte[] sendBytes = new byte[BUFSIZE];
 			int count;
