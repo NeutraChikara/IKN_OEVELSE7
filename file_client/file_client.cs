@@ -131,9 +131,18 @@ namespace tcp
 		public static void Main (string[] args)
 		{
 			Console.WriteLine ("Client starts...");
-			string[] s = { "10.0.0.1", "/root/Desktop/file" };
 
-			new file_client(s);
+			if (args.Length != 2) {
+			
+				Console.Write ("Enter file path: ");
+				string arg1 = Console.ReadLine ();
+
+				string[] arg = { "10.0.0.2", arg1 };
+				new file_client (arg);
+
+			}
+			else
+				new file_client(args);
 		}
 	}
 }
