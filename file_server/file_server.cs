@@ -32,7 +32,7 @@ namespace tcp
 		/// </summary>
 		private file_server ()
 		{
-			TcpListener serverSocket = new TcpListener (IPAddress.Parse ("10.0.0.1"), PORT); //new TcpListener(IPAddress.Parse("10.0.0.1"), PORT);
+			TcpListener serverSocket = new TcpListener (PORT); // skal lytte på port ikke ip også!
 			TcpClient clientSocket = default(TcpClient);
 			serverSocket.Start ();
 			Console.WriteLine (" >> Server Started");
@@ -155,23 +155,6 @@ namespace tcp
 			Console.WriteLine (" >> Size of file: " + filesize);
 		}
 
-
-		/// <summary>
-		/// Sends the file.
-		/// </summary>
-		/// <param name='fileName'>
-		/// The filename.
-		/// </param>
-		/// <param name='fileSize'>
-		/// The filesize.
-		/// </param>
-		/// <param name='io'>
-		/// Network stream for writing to the client.
-		/// </param>
-		private void sendFile (String fileName, long fileSize, NetworkStream io)
-		{
-			// TO DO Your own code
-		}
 
 		/// <summary>
 		/// The entry point of the program, where the program control starts and ends.
