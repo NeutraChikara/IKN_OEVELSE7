@@ -40,7 +40,7 @@ namespace tcp
 				{
 					// Setting up connection and calling receiveFile
 
-					SendChar("L",clientSocket);
+					SendChar(args[1],clientSocket);
 					break;
 				}
 				catch (Exception ex)
