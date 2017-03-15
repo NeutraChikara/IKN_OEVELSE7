@@ -3,6 +3,8 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Diagnostics;
+using System.Text;
+using System.Threading;
 
 namespace tcp
 {
@@ -17,6 +19,7 @@ namespace tcp
 		/// </summary>
 		const int BUFSIZE = 1000;	// Change ReceiveBufferSize of TcpListener accordingly if changed
 
+		public static bool messageSent = false;
 		/// <summary>
 		/// Initializes a new instance of the <see cref="file_client"/> class.
 		/// </summary>
@@ -27,16 +30,17 @@ namespace tcp
 		{
 			string spacer = "--------------------";
 			// Sets up connection and calls receiveFile
+
 			UdpClient clientSocket = new UdpClient();
 
+			clientSocket.Client.Connect(args [0], PORT);
 			while (true) 
 			{
 				try
 				{
 					// Setting up connection and calling receiveFile
-					clientSocket.Connect (args [0], PORT);
 
-					clientSocket.Close ();
+					SendChar("L",clientSocket);
 					break;
 				}
 				catch (Exception ex)
@@ -61,11 +65,23 @@ namespace tcp
 				
 			}
 		}
-		private void SendChar(char charToSend,UdpClient udpclient)
+		public static void SendCallback(IAsyncResult ar)
 		{
-			byte byteToSend = Convert.ToByte (charToSend);
+			UdpClient u = (UdpClient)ar.AsyncState;
 
-			udpclient.BeginSend (byteToSend, 1, udpclient.EndSend);
+			Console.WriteLine("number of bytes sent: {0}", u.EndSend(ar));
+			messageSent = true;
+		}
+		private void SendChar(string charToSend,UdpClient udpclient)
+		{
+			
+
+			byte[] sendBytes = Encoding.ASCII.GetBytes(charToSend);
+
+			udpclient.BeginSend (sendBytes, sendBytes.Length,new AsyncCallback(SendCallback),udpclient);
+			while (!messageSent) {
+				Thread.Sleep (100);
+			}
 		}
 
 		/// <summary>
