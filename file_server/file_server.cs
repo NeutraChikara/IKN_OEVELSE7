@@ -42,13 +42,13 @@ namespace tcp
 
 			IPEndPoint e = new IPEndPoint(IPAddress.Any,0);
 			UdpClient udpClient = new UdpClient (PORT);
+			while (true) {
+				byte[] receiveByes = udpClient.Receive (ref e);
 
-			byte[] receiveByes = udpClient.Receive (ref e);
+				string returnData = Encoding.ASCII.GetString (receiveByes);
 
-			string returnData = Encoding.ASCII.GetString (receiveByes);
-
-			Console.WriteLine (returnData.ToString());
-
+				Console.WriteLine (returnData.ToString ());
+			}
 			Console.WriteLine ("Press s to stop server, this will stop the server immediately");
 			Console.WriteLine (spacer);
 			ConsoleKeyInfo input = Console.ReadKey(true);
