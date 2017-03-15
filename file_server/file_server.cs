@@ -32,13 +32,22 @@ namespace tcp
 		/// </summary>
 		private file_server ()
 		{
-			TcpListener serverSocket = new TcpListener (PORT); // skal lytte på port ikke ip også!
-			TcpClient clientSocket = default(TcpClient);
-			serverSocket.Start ();
+			
+
+
 			Console.WriteLine (" >> Server Started");
 			Console.WriteLine (spacer);
 
 
+
+			IPEndPoint e = new IPEndPoint(IPAddress.Any,0);
+			UdpClient udpClient = new UdpClient (PORT);
+
+			byte[] receiveByes = udpClient.Receive (ref e);
+
+			string returnData = Encoding.ASCII.GetString (receiveByes);
+
+			Console.WriteLine (returnData.ToString());
 
 			Console.WriteLine ("Press s to stop server, this will stop the server immediately");
 			Console.WriteLine (spacer);
@@ -51,13 +60,14 @@ namespace tcp
 			
 			Console.WriteLine (" >> Stopping server...");
 
-			if (clientSocket != null && clientSocket.Connected)
-				clientSocket.Close ();
-			serverSocket.Stop ();
+		/*	if (clientSocket != null && clientSocket.Connected)
+				clientSocket.Close (); */
 			Console.WriteLine (" >> exit");
 
-		}
 
+
+
+		}
 
 
 	

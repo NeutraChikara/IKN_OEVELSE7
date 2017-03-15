@@ -20,9 +20,17 @@
 /root/Desktop/IKN-7/IKN_OEVELSE7/file_client/bin/Debug/LIB.dll
 /root/Desktop/IKN-7/IKN_OEVELSE7/file_client/bin/Debug/LIB.dll.mdb
 /root/Desktop/IKN_OEVELSE7/file_client/obj/x86/Debug/.NETFramework,Version=v4.5.AssemblyAttribute.cs
+<<<<<<< HEAD
+=======
+/root/Desktop/IKN_OEVELSE7/file_client/bin/Debug/file_client.exe.mdb
+/root/Desktop/IKN_OEVELSE7/file_client/bin/Debug/file_client.exe
+>>>>>>> 214622672742ac7dd75a8ee84869c82c1a2918c3
 /root/Desktop/IKN_OEVELSE7/file_client/obj/x86/Debug/file_client.exe
 /root/Desktop/IKN_OEVELSE7/file_client/obj/x86/Debug/file_client.exe.mdb
 /root/Desktop/IKN_OEVELSE7/file_client/bin/Debug/LIB.dll
 /root/Desktop/IKN_OEVELSE7/file_client/bin/Debug/LIB.dll.mdb
+<<<<<<< HEAD
 /root/Desktop/IKN_OEVELSE7/file_client/bin/Debug/file_client.exe.mdb
 /root/Desktop/IKN_OEVELSE7/file_client/bin/Debug/file_client.exe
+=======
+>>>>>>> 214622672742ac7dd75a8ee84869c82c1a2918c3
