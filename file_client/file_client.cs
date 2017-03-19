@@ -32,7 +32,6 @@ namespace tcp
 			// Sets up connection and calls receiveFile
 
 			UdpClient clientSocket = new UdpClient();
-
 			clientSocket.Client.Connect(args [0], PORT);
 			while (true) 
 			{

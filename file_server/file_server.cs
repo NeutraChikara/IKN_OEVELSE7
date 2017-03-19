@@ -40,14 +40,27 @@ namespace tcp
 
 
 
-			IPEndPoint e = new IPEndPoint(IPAddress.Any,0);
+			IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, PORT);
 			UdpClient udpClient = new UdpClient (PORT);
 			while (true) {
-				byte[] receiveByes = udpClient.Receive (ref e);
+				byte[] receiveByes = udpClient.Receive (ref RemoteIpEndPoint);
 
-				string returnData = Encoding.ASCII.GetString (receiveByes);
 
-				Console.WriteLine (returnData.ToString ());
+				char returnData = Encoding.ASCII.GetString (receiveByes)[0];
+				switch (returnData) {
+				case 'l':
+				case 'L':
+					Console.WriteLine ("Sending /proc/loadavg..");
+					SendLoadAvg (udpClient);
+
+					break;
+				case 'u':
+				case 'U':
+					Console.WriteLine ("Sending /proc/uptime..");
+					SendUptime (udpClient);
+					break;
+				}
+					
 			}
 			Console.WriteLine ("Press s to stop server, this will stop the server immediately");
 			Console.WriteLine (spacer);
@@ -69,6 +82,24 @@ namespace tcp
 
 		}
 
+		private void SendLoadAvg(UdpClient udpclient)
+		{
+			string loadAvg = File.ReadAllText ("/proc/loadavg");
+			Console.WriteLine (loadAvg);
+			IPEndPoint iep = new IPEndPoint (IPAddress.Parse ("10.0.0.1"), PORT);
+			byte[] sendBytes = Encoding.ASCII.GetBytes(loadAvg);
+			udpclient.Send (sendBytes, sendBytes.Length, iep);
+		}
+			
+		private void SendUptime (UdpClient udpclient)
+		{
+			//udpclient.Connect ("10.0.0.1", PORT);
+			string uptime = File.ReadAllText ("/proc/uptime");
+			Console.WriteLine (uptime); 
+			IPEndPoint iep = new IPEndPoint (IPAddress.Parse ("10.0.0.1"), PORT);
+			byte[] sendBytes = Encoding.ASCII.GetBytes(uptime);
+			udpclient.Send (sendBytes, sendBytes.Length, iep);
+		}
 
 	
 
