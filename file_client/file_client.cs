@@ -32,23 +32,22 @@ namespace tcp
 
 			UdpClient clientSocket = new UdpClient (PORT);
 			IPEndPoint iep = new IPEndPoint (IPAddress.Parse("10.0.0.2"), PORT);
-
 			while (true) 
 			{
 				try
 				{
 					// Setting up connection and calling receiveFile
 
-					SendChar(args[1],clientSocket,ref iep);
+					SendChar("10.0.0.1 "+args[1],clientSocket,ref iep);
 					string output = Recieve(clientSocket);
-					char cmd = args[1][args[1].Length-1];
+					char cmd = args[1][args[1].Length -1];
 					if( (cmd == 'L') || (cmd == 'l'))
 						PrintLoadavg(output);
 					else if( (cmd == 'U') || (cmd == 'u'))
 						PrintUpstream(output);
 					break;
 				}
-				catch (Exception ex)
+				catch (Exception ex) 
 				{
 					// If connection failed
 					Console.WriteLine (ex.ToString ());
@@ -70,11 +69,11 @@ namespace tcp
 				
 			}
 		}
-		private void SendChar(string charToSend,UdpClient udpclient,ref IPEndPoint iep)
+		private void SendChar(string stringToSend,UdpClient udpclient,ref IPEndPoint iep)
 		{
 			
 
-			byte[] sendBytes = Encoding.ASCII.GetBytes(charToSend);
+			byte[] sendBytes = Encoding.ASCII.GetBytes(stringToSend);
 			udpclient.Send (sendBytes, sendBytes.Length, iep);
 
 	
