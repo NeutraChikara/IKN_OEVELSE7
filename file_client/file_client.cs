@@ -88,7 +88,7 @@ namespace tcp
 
 		private void PrintUpstream(string upstream)
 		{
-			string[] command = upstream.Split (new char[] {' '}, 2);
+			string[] command = upstream.Split (new char[] {' '},  2);
 
 			Console.WriteLine (spacer);
 			Console.Write("Uptime for server: ");
