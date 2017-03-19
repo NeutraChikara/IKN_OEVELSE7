@@ -40,24 +40,24 @@ namespace tcp
 
 
 
-			IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, PORT);
+
 			UdpClient udpClient = new UdpClient (PORT);
 			while (true) {
-				byte[] receiveByes = udpClient.Receive (ref RemoteIpEndPoint);
+				
+				string returnData = ReceiveCmd (udpClient);
+				IPEndPoint iep = new IPEndPoint(IPAddress.Parse(returnData.Split(' ')[0]),PORT);
 
-
-				char returnData = Encoding.ASCII.GetString (receiveByes)[0];
-				switch (returnData) {
+				switch (returnData[returnData.Length-1] ) {
 				case 'l':
 				case 'L':
 					Console.WriteLine ("Sending /proc/loadavg..");
-					SendLoadAvg (udpClient);
+					SendLoadAvg (udpClient,ref iep);
 
 					break;
 				case 'u':
 				case 'U':
 					Console.WriteLine ("Sending /proc/uptime..");
-					SendUptime (udpClient);
+					SendUptime (udpClient, ref iep);
 					break;
 				}
 					
@@ -76,27 +76,30 @@ namespace tcp
 		/*	if (clientSocket != null && clientSocket.Connected)
 				clientSocket.Close (); */
 			Console.WriteLine (" >> exit");
-
-
-
-
 		}
 
-		private void SendLoadAvg(UdpClient udpclient)
+		private string ReceiveCmd(UdpClient udpclient)
+		{
+			IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, PORT);
+
+			byte[] receiveByes = udpclient.Receive (ref RemoteIpEndPoint);
+			return Encoding.ASCII.GetString(receiveByes);
+		}
+
+		private void SendLoadAvg(UdpClient udpclient,ref IPEndPoint iep)
 		{
 			string loadAvg = File.ReadAllText ("/proc/loadavg");
 			Console.WriteLine (loadAvg);
-			IPEndPoint iep = new IPEndPoint (IPAddress.Parse ("10.0.0.1"), PORT);
+
 			byte[] sendBytes = Encoding.ASCII.GetBytes(loadAvg);
 			udpclient.Send (sendBytes, sendBytes.Length, iep);
 		}
 			
-		private void SendUptime (UdpClient udpclient)
+		private void SendUptime (UdpClient udpclient, ref IPEndPoint iep)
 		{
-			//udpclient.Connect ("10.0.0.1", PORT);
 			string uptime = File.ReadAllText ("/proc/uptime");
 			Console.WriteLine (uptime); 
-			IPEndPoint iep = new IPEndPoint (IPAddress.Parse ("10.0.0.1"), PORT);
+
 			byte[] sendBytes = Encoding.ASCII.GetBytes(uptime);
 			udpclient.Send (sendBytes, sendBytes.Length, iep);
 		}

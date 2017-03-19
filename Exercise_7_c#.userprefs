@@ -1,9 +1,9 @@
-﻿<Properties StartupItem="file_client/file_client.csproj">
+﻿<Properties StartupItem="file_server/file_server.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
   <MonoDevelop.Ide.Workbench ActiveDocument="file_client/file_client.cs">
     <Files>
-      <File FileName="file_client/file_client.cs" Line="49" Column="3" />
-      <File FileName="file_server/file_server.cs" Line="28" Column="23" />
+      <File FileName="file_client/file_client.cs" Line="11" Column="8" />
+      <File FileName="file_server/file_server.cs" Line="58" Column="14" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
