@@ -38,9 +38,10 @@ namespace tcp
 				{
 					// Setting up connection and calling receiveFile
 
-					SendChar("10.0.0.1 "+args[1],clientSocket,ref iep);
+					SendChar(args[0]+" "+args[1],clientSocket,ref iep);
 					string output = Recieve(clientSocket);
 					char cmd = args[1][args[1].Length -1];
+					Console.WriteLine(cmd);
 					if( (cmd == 'L') || (cmd == 'l'))
 						PrintLoadavg(output);
 					else if( (cmd == 'U') || (cmd == 'u'))
@@ -126,10 +127,10 @@ namespace tcp
 
 			if (args.Length != 2) {
 			
-				Console.Write ("Enter file path: ");
+				Console.Write ("Enter (l)oad or (u)ptime: ");
 				string arg1 = Console.ReadLine ();
 
-				string[] arg = { "10.0.0.2", arg1 };
+				string[] arg = { "10.0.0.1", arg1 };
 				new file_client (arg);
 
 			}
